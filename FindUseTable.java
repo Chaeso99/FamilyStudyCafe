@@ -159,6 +159,43 @@ public class FindUseTable {
 			return inTime;
 		}
 		
+		//USE테이블에서 퇴실시간 찾아오기
+				public String findOutTime(String usenum) throws SQLException
+				{
+					String outTime="0";
+					Connection con=null;
+					PreparedStatement pstmt = null;
+					ResultSet rs = null;
+				
+					String queryFindOutTime = "select checkoutTime from `USE` "
+							+ "where useNum = ?";
+
+					try {
+						con=DBconnect.getConnection();
+						pstmt=con.prepareStatement(queryFindOutTime);
+						pstmt.setString(1, usenum);
+						rs = pstmt.executeQuery();
+						if(rs.next()&&rs==null)
+						{
+							outTime="0";
+						}
+						else if(rs.next())
+						{
+							outTime = rs.getString("checkoutTime");
+						}						
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+					finally 
+					{
+						rs.close();
+						pstmt.close();
+						con.close();
+					}
+					System.out.println("findoutTime:"+outTime);
+					return outTime;
+				}
+		
 		//useTime(사용시간) 계산
 		public String usetimeC(String checkintime,
 				String checkouttime) throws ParseException
