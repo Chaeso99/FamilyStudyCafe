@@ -810,7 +810,8 @@ implements Runnable{
     		public void actionPerformed(ActionEvent e) {
     			JButton seatSource = (JButton)e.getSource(); //클릭한 버튼의 라벨값 읽어옴
     			FindUseTable findUseTable = new FindUseTable();
-    			String usestat = null; //seatInfoPanel의 memberTelLabel에 들어갈 
+    			String usenum = ""; //사용번호
+    			String telMember = ""; //seatInfoPanel의 memberTelLabel에 들어갈 전화번호
     			
     			//의자 라벨의 값 읽어와서 의자정보 패널의 의자번호 라벨에 붙임
     			seatNumLabel_seatInfoPanel.setText(seatSource.getText());
@@ -818,15 +819,16 @@ implements Runnable{
     			//{
     				//클릭한 의자라벨값 읽어와서 findUse 실행(사용중인지 검사)
     				try {
-    					usestat = findUseTable.findUse(Integer.parseInt(seatSource.getText()));
-                        usestat = findUseTable.findmemt(Integer.parseInt(usestat));
-                        System.out.println("ManagerMain.usestat:"+usestat);
+    					usenum = findUseTable.findUse(Integer.parseInt(seatSource.getText()));//사용번호 찾아오기
+                        telMember = findUseTable.findmemt(Integer.parseInt(usenum)); //사용번호로 전화번호 검색
+                        System.out.println("ManagerMain.usestat: "+usenum);
+                        System.out.println("ManagerMain.telMember: "+telMember);
 					} catch (NumberFormatException e1) {
 						e1.printStackTrace();
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}
-    				if(usestat=="0")//리턴받은값이 0이면 회원전화번호 라벨에서 지우기(공백상태로 둠)
+    				if(telMember.equals(""))//리턴받은값이 0이면 회원전화번호 라벨에서 지우기(공백상태로 둠)
     				{
     					memberInfoBtn.setEnabled(false);
     					memberTelLabel.setText("");
@@ -836,7 +838,7 @@ implements Runnable{
     					//seatInfo 패널의 정보 버튼 활성화
     					memberInfoBtn.setEnabled(true); 					
     					//사용 테이블에서 유저 전화번호 검색해와서 집어넣기
-    					memberTelLabel.setText(usestat);
+    					memberTelLabel.setText(telMember);
     				}
     				
     				memberInfoPanel.setEnabled(false);
